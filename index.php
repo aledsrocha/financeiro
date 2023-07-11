@@ -1,5 +1,15 @@
 <?php 
 	require_once 'config.php';
+	require_once 'dao/ReceitaDaoMysql.php';
+
+	$lista = [];
+	$sql = $pdo->query("SELECT * FROM receita");
+	if ($sql->rowCount() > 0) {
+		$lista = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+
+
+	}
  ?>
 
 <!DOCTYPE html>
@@ -13,11 +23,12 @@
 <body>
 	<h1>SUAS FINANÇAS</h1>
 	<fieldset class="valoresFinal">
-	<label>total de entradas</label>
+	<label id="valorTotal">total de entradas</label>
 	<input type="text" name="" id="total1" value="R$:0,00" disabled><br><br>
 
 	<label>total de saida</label>
 	<input type="text" name="" id="total2" value="R$:0,00" disabled>
+	<button onclick="somarValores()">atualizar valores</button>
 
 	
 	</fieldset>
@@ -30,7 +41,9 @@
 </form>
 </div><br><br><br>
 
+
 <div class="tabela">
+	
 	<table>
 		<thead>
 			<tr>
@@ -39,16 +52,36 @@
 				<th>nº doc</th>
 				<th>categoria</th>
 				<th>cliente</th>
-				<th>valor</th>
+				<th>valor em R$</th>
 				<th>obs</th>
 				<th>ação</th>
 			</tr>
 		</thead>
+		<?php foreach($lista as $usuarios):?>
+			<tr>
+				<td><?=$usuarios['data'];?></td>
+				<td><?=$usuarios['doc'];?></td>
+				<td><?=$usuarios['ndoc'];?></td>
+				<td><?=$usuarios['categoria'];?></td>
+				<td><?=$usuarios['cliente'];?></td>
+				<td id="valor"><?=$usuarios['valor'];?></td>
+				<td><?=$usuarios['obs'];?></td>
+				<td>
+				<a href="<?=$base;?>/excluir.php?id=<?=$usuarios['id'];?>"> <img src="<?=$base?>/media/img/excluir.png" width="25">[ excluir ]</a>
+				<a href="<?=$base;?>/editar.php?id=<?=$usuarios['id'];?>"> <img src="<?=$base?>/media/img/excluir.png" width="25">[ editar ]</a>
+				
+				</td>
+
+			</tr>
+
+			<?php endforeach;?>
 
 		
 	</table>
+
 		
 	
 </div>
+
 
 </html>
